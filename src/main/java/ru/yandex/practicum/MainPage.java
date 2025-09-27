@@ -12,9 +12,6 @@ public class MainPage {
 
     private final WebDriver driver;
 
-    private By orderField = By.cssSelector(".Input_Input__1iN_Z.Header_Input__xIoUq");
-    private By statusButton = By.cssSelector(".Header_Link__1TAG7");
-    private By goButton = By.cssSelector(".Button_Button__ra12g.Header_Button__28dPO");
     private By accordion = By.cssSelector(".accordion");
 
     public static final By orderTopButton = By.cssSelector(".Button_Button__ra12g");
@@ -34,19 +31,6 @@ public class MainPage {
 
     public void openMainPage() {
         driver.get(EnvConfig.BASE_URL);
-    }
-
-    public StatusPage clickOnGoButton() {
-        driver.findElement(goButton).click();
-        return new StatusPage(driver);
-    }
-
-    public void enterOrderIn(String orderNumber) {
-        driver.findElement((orderField)).sendKeys(orderNumber);
-    }
-
-    public void clickOnStatusButton() {
-        driver.findElement(statusButton).click();
     }
 
     public void scrollToAccordion() {
