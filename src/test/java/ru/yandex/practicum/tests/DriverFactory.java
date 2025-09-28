@@ -1,6 +1,5 @@
 package ru.yandex.practicum.tests;
 
-import org.junit.After;
 import org.junit.rules.ExternalResource;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;

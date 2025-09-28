@@ -1,4 +1,5 @@
 package ru.yandex.practicum;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -12,17 +13,18 @@ public class MainPage {
 
     private final WebDriver driver;
 
-    private By accordion = By.cssSelector(".accordion");
+    private final By accordion = By.cssSelector(".accordion");
+    private final By orderTopButton = By.cssSelector(".Button_Button__ra12g");
+    private final By orderBottomButton = By.cssSelector(".Home_FinishButton__1_cWm>button");
+    private final String accordionElementString = "#accordion__heading-%d";
+    private final String accordionAnswerString = "#accordion__panel-%d p";
 
-    public static final By orderTopButton = By.cssSelector(".Button_Button__ra12g");
-    public static final By orderBottomButton = By.cssSelector(".Home_FinishButton__1_cWm>button");
-
-    public static By createAccordionLocator(int number) {
-        return By.cssSelector("#accordion__heading-" + number);
+    private By createAccordionLocator(int number) {
+        return By.cssSelector(String.format(accordionElementString, number));
     }
 
-    public static By createAccordionAnswer(int number) {
-        return By.cssSelector("#accordion__panel-" + number + " p");
+    private By createAccordionAnswer(int number) {
+        return By.cssSelector(String.format(accordionAnswerString, number));
     }
 
     public MainPage(WebDriver driver){
@@ -40,13 +42,15 @@ public class MainPage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
     }
 
-    public void clickOnAccordion(By locator) {
+    public void clickOnAccordion(int accordingIndex) {
+        By locator = createAccordionLocator(accordingIndex);
         WebElement element = driver.findElement(locator);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
         element.click();
     }
 
-    public void checkAccordionText(By locator, String expected) {
+    public void checkAccordionText(int accordingIndex, String expected) {
+        By locator = createAccordionAnswer(accordingIndex);
         WebElement element = new WebDriverWait(driver, EnvConfig.WEB_DRIVER_WAIT_TIMEOUT)
                 .until(ExpectedConditions.visibilityOfElementLocated(locator));
 
@@ -56,7 +60,19 @@ public class MainPage {
         Assert.assertEquals("Текст не соответствует ожидаемому", expected, actualText);
     }
 
-    public void clickOrderButton(By locator) {
+    public void clickOrderButton(int orderButton) {
+        By locator = null;
+        switch (orderButton) {
+            case EnvConfig.TOP_BUTTON:
+                locator = orderTopButton;
+                break;
+            case EnvConfig.BOTTOM_BUTTON:
+                locator = orderBottomButton;
+                break;
+            default:
+                Assert.fail(String.format("Нет такой кнопки заказа: %d", orderButton));
+        }
+
         WebElement element = driver.findElement(locator);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
 

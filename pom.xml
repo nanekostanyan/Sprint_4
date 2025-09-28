@@ -20,13 +20,6 @@
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
         </dependency>
-
-<!--        <dependency>
-            <groupId>io.streamnative</groupId>
-            <artifactId>pulsar-client-api</artifactId>
-            <version>4.0.6.1</version>
-        </dependency>-->
-
     </dependencies>
 
     <properties>

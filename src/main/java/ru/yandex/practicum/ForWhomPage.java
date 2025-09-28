@@ -11,21 +11,21 @@ import ru.yandex.practicum.pages.util.EnvConfig;
 public class ForWhomPage {
     private final WebDriver driver;
 
-    private By forWhomPage = By.cssSelector(".Order_Content__bmtHS");
-    private By nameField = By.cssSelector("input[placeholder=\"* Имя\"]");
-    private By surnameField = By.cssSelector("input[placeholder=\"* Фамилия\"]");
-    private By addressField = By.cssSelector("input[placeholder=\"* Адрес: куда привезти заказ\"]");
-    private By metroSelect = By.cssSelector(".select-search__input");
-    private static final String metroSelectorString = ".//ul[@class='select-search__options']/li[%d]";
-    private By phoneNumber = By.cssSelector("input[placeholder=\"* Телефон: на него позвонит курьер\"]");
-    private By nextButton = By.cssSelector(".Order_NextButton__1_rCA button");
+    private final By forWhomPage = By.cssSelector(".Order_Content__bmtHS");
+    private final By nameField = By.cssSelector("input[placeholder=\"* Имя\"]");
+    private final By surnameField = By.cssSelector("input[placeholder=\"* Фамилия\"]");
+    private final By addressField = By.cssSelector("input[placeholder=\"* Адрес: куда привезти заказ\"]");
+    private final By metroSelect = By.cssSelector(".select-search__input");
+    private final String metroSelectorString = ".//ul[@class='select-search__options']/li[%d]";
+    private final By phoneNumber = By.cssSelector("input[placeholder=\"* Телефон: на него позвонит курьер\"]");
+    private final By nextButton = By.cssSelector(".Order_NextButton__1_rCA button");
 
     public ForWhomPage(WebDriver driver) {
         this.driver = driver;
     }
 
     // Возвращает локатор оставшейся [index] станции метро в селекторе
-    public static By getMetroLocatorByIndex(int index) {
+    private By createMetroLocatorByIndex(int index) {
         return By.xpath(String.format(metroSelectorString, index));
     }
 
@@ -58,7 +58,8 @@ public class ForWhomPage {
         driver.findElement(metroSelect).sendKeys(name);
     }
 
-    public void selectMetro(By locator) {
+    public void selectMetro(int metroSelectNumber) {
+        By locator = createMetroLocatorByIndex(metroSelectNumber);
         WebElement metro = driver.findElement(locator);
         Assert.assertTrue(metro.isEnabled());
         metro.click();
@@ -69,7 +70,7 @@ public class ForWhomPage {
                          String address,
                          String phone,
                          String metroNamePrefix,
-                         By metroSelectLocator) {
+                         int metroSelectNumber) {
 
         waitToLoad();
         inputName(name);
@@ -77,6 +78,6 @@ public class ForWhomPage {
         inputAddress(address);
         inputPhone(phone);
         metroSelectClick(metroNamePrefix);
-        selectMetro(metroSelectLocator);
+        selectMetro(metroSelectNumber);
     }
 }

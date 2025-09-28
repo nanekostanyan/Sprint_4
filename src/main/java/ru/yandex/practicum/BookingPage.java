@@ -10,30 +10,30 @@ import ru.yandex.practicum.pages.util.EnvConfig;
 public class BookingPage {
     private final WebDriver driver;
 
-    private By bookingPage = By.cssSelector(".Order_Content__bmtHS");
-    private By datePickField = By.cssSelector(".react-datepicker__input-container>input");
-    private By bookingDurationField = By.cssSelector(".Dropdown-placeholder");
-    private By commentForCourier = By.cssSelector(".Input_InputContainer__3NykH>input[class='Input_Input__1iN_Z Input_Responsible__1jDKN']");
-    private By orderButton = By.xpath(".//div[starts-with(@class,'Order_Buttons')]/button[text()='Заказать']");
-    private static final String calendarDateString = ".react-datepicker__month .react-datepicker__week:nth-child(%d) .react-datepicker__day:nth-child(%d)";
-    private static final String bookingDurationString = ".Dropdown-menu .Dropdown-option:nth-child(%d)";
-    private static final String colorCheckboxString = "input#%s[type='checkbox']";
+    private final By bookingPage = By.cssSelector(".Order_Content__bmtHS");
+    private final By datePickField = By.cssSelector(".react-datepicker__input-container>input");
+    private final By bookingDurationField = By.cssSelector(".Dropdown-placeholder");
+    private final By commentForCourier = By.cssSelector(".Input_InputContainer__3NykH>input[class='Input_Input__1iN_Z Input_Responsible__1jDKN']");
+    private final By orderButton = By.xpath(".//div[starts-with(@class,'Order_Buttons')]/button[text()='Заказать']");
+    private final String calendarDateString = ".react-datepicker__month .react-datepicker__week:nth-child(%d) .react-datepicker__day:nth-child(%d)";
+    private final String bookingDurationString = ".Dropdown-menu .Dropdown-option:nth-child(%d)";
+    private final String colorCheckboxString = "input#%s[type='checkbox']";
 
     public BookingPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public static final By getCalendarDateLocator(int row, int column) {
+    private By getCalendarDateLocator(int row, int column) {
         String string = String.format(calendarDateString, row, column);
         return By.cssSelector(string);
     }
 
-    public static final By getBookingDurationLocator(int number) {
+    private By getBookingDurationLocator(int number) {
         String string = String.format(bookingDurationString, number);
         return By.cssSelector(string);
     }
 
-    public static final By getColorCheckboxLocator(String color) {
+    private By getColorCheckboxLocator(String color) {
         String string = String.format(colorCheckboxString, color);
         return By.cssSelector(string);
     }
@@ -47,7 +47,8 @@ public class BookingPage {
         driver.findElement(orderButton).click();
     }
 
-    public void selectDate(By locator) {
+    public void selectDate(int calendarDateRow, int calendarDateColumn) {
+        By locator = getCalendarDateLocator(calendarDateRow, calendarDateColumn);
         driver.findElement(datePickField).click();
 
         WebElement element = new WebDriverWait(driver, EnvConfig.WEB_DRIVER_WAIT_TIMEOUT)
@@ -56,7 +57,9 @@ public class BookingPage {
         element.click();
     }
 
-    public void selectBookingDuration(By locator) {
+    public void selectBookingDuration(int bookingDurationNumber) {
+        By locator = getBookingDurationLocator(bookingDurationNumber);
+
         driver.findElement(bookingDurationField).click();
 
         WebElement element = new WebDriverWait(driver, EnvConfig.WEB_DRIVER_WAIT_TIMEOUT)
@@ -65,9 +68,10 @@ public class BookingPage {
         element.click();
     }
 
-    public void selectColorCheckboxes(By[] locators) {
-        for (int i = 0; i < locators.length; i ++) {
-            driver.findElement(locators[i]).click();
+    public void selectColorCheckboxes(String[] colors) {
+        for (int i = 0; i < colors.length; i ++) {
+            By locator = getColorCheckboxLocator(colors[i]);
+            driver.findElement(locator).click();
         }
     }
 
@@ -75,11 +79,16 @@ public class BookingPage {
         driver.findElement(commentForCourier).sendKeys(comment);
     }
 
-    public void fillPage(By dateLocator, By bookingDurationLocator, By[] colorLocators, String comment) {
+    public void fillPage(int calendarDateRow,
+                         int calendarDateColumn,
+                         int bookingDurationNumber,
+                         String[] colors,
+                         String comment) {
+
         waitToLoad();
-        selectDate(dateLocator);
-        selectBookingDuration(bookingDurationLocator);
-        selectColorCheckboxes(colorLocators);
+        selectDate(calendarDateRow, calendarDateColumn);
+        selectBookingDuration(bookingDurationNumber);
+        selectColorCheckboxes(colors);
         inputCommentForCourier(comment);
     }
 }
